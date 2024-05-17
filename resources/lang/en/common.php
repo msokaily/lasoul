@@ -1,5 +1,10 @@
 <?php
 return [
+    "story" => "Story",
+    "menu" => "Menu",
+    "gallery" => "Gallery",
+
+    "Opening Hours" => "Opening Hours",
     "settings" => "Settings",
     "sort_success" => "Sorted Successfully",
     "save_sort" => "Save Sort",

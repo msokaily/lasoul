@@ -16,14 +16,16 @@ class ContentEditor extends Component
     public $default = '';
     public $fields;
     public $type = 'text';
+    public $title = null;
     public $open = false;
 
     #[On('editor-type-changed')] 
-    public function setMode($name, $type, $default = '', $fields = null)
+    public function setMode($name, $type, $default = '', $fields = null, $title = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->fields = $fields;
+        $this->title = $title;
         $value = Content::where('name', $this->name)->first();
         if (in_array($this->type, ['image', 'images'])) {
             $value = $value ? $value->value : ($this->type == 'images' ? [] : '');
@@ -47,7 +49,11 @@ class ContentEditor extends Component
                 } else {
                     $val = new stdClass();
                     foreach ($this->fields as $one) {
-                        $val->{$one['name']} = $one['default'];
+                        if (isset($one['only_editor']) && $one['only_editor']) {
+
+                        } else {
+                            $val->{$one['name']} = $one['default'] ?? '';
+                        }
                     }
                     $this->value = $val;
                 }
@@ -65,12 +71,18 @@ class ContentEditor extends Component
         $this->value = $value;
     }
 
+    #[On('editor-set-field-value')]
     public function updateMultipleValue($value, $name)
     {
         if (!$this->value) {
             $this->value = new stdClass();
         }
-        $this->value->{$name} = $value;
+        try {
+            $this->value->{$name} = $value;
+        } catch (\Throwable $th) {
+            $this->value = new stdClass();
+            $this->value->{$name} = $value;
+        }
     }
     
     public function close()
@@ -85,6 +97,7 @@ class ContentEditor extends Component
     {
         $content = Content::where('name', $this->name);
         $values = $this->only('value', 'type');
+        // dd($values, $content);
         if ($this->type == 'images') {
             if (is_array($values['value']) && count($values['value']) > 0) {
                 $values['value'] = json_encode($values['value']);

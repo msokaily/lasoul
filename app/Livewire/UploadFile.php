@@ -44,8 +44,14 @@ class UploadFile extends Component
                 ])->id;
             }
         } else {
+            $fileTypeValidate = $this->type;
+            if ($this->type == 'video') {
+                $fileTypeValidate = 'mimes:'.implode(',', $videoExtensions);
+            } else if ($this->type == 'media') {
+                $fileTypeValidate = '';
+            }
             $this->validate([
-                'file' => $this->type . '|max:' . ($this->fileSize ?? 10000), // 1MB Max
+                'file.*' => $fileTypeValidate . '|max:' . ($this->fileSize ?? 10000), // 1MB Max
             ]);
             $newItem = Media::create([
                 'url' => $this->file,
@@ -77,7 +83,7 @@ class UploadFile extends Component
             }
         }
         if ($this->result_to_event) {
-            $this->dispatch($this->result_to_event, $this->fileId);
+            $this->dispatch($this->result_to_event, $this->fileId, $this->input);
         }
     }
 

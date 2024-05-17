@@ -15,36 +15,48 @@
                     <input type="hidden" wire:model='type'>
                     <div class="modal-body">
                         @if ($open)
+                            @if ($title)
+                                <h3>{{$title}}</h3>
+                            @endif
                             @if ($type == 'text')
                                 @if ($fields)
                                     <div class="edit-mode-type-text">
                                         @foreach ($fields as $key => $field)
-                                            <div class="row mb-2">
-                                                <div class="col-md-2">
-                                                    <label for="{{ $field['name'] }}-field" style="margin-top: 14px;">
-                                                        <b>{{ ucfirst($field['name']) }}</b>
-                                                    </label>
-                                                </div>
-                                                <div class="col-md-10">
-                                                    @if ($field['type'] == 'textarea')
-                                                        <textarea id="{{ $field['name'] }}-field" class="form-control" placeHolder="{{ $field['placeholder'] ?? '' }}"
-                                                            wire:change='updateMultipleValue($event.target.value, "{{ $field['name'] }}")' rows="10">{{ $value->{$field['name']} ?? ($field['default'] ?? '') }}</textarea>
-                                                        @if (isset($field['note']))
-                                                            <p>{{ $field['note'] }}</p>
+                                            @if ($field['type'] == 'html')
+                                                {!! $field['html'] ?? '' !!}
+                                            @else
+                                                <div class="row mb-2">
+                                                    <div class="col-md-{{$field['title_size'] ?? '2'}}">
+                                                        <label for="{{ slug($field['name']) }}-field" style="margin-top: 8px;">
+                                                            <b>{{ ucfirst($field['name']) }}</b>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md{{ isset($field['input_size']) && $field['input_size'] ? '-'.$field['input_size'] : ''}}">
+                                                        @if ($field['type'] == 'textarea')
+                                                            <textarea id="{{ slug($field['name']) }}-field" class="form-control" placeHolder="{{ $field['placeholder'] ?? '' }}"
+                                                                wire:change='updateMultipleValue($event.target.value, "{{ $field['name'] }}")' rows="10">{{ $value->{$field['name']} ?? ($field['default'] ?? '') }}</textarea>
+                                                            @if (isset($field['note']))
+                                                                <p>{{ $field['note'] }}</p>
+                                                            @endif
+                                                        @elseif (in_array($field['type'], ['image', 'images', 'video', 'media']))
+                                                            @livewire('upload-file', ['id' => $field['name'].'-field', 'input' => $field['name'], 'fileId' => $value->{$field['name']} ?? '', 'type' => $field['type'], 'multiple' => $field['type'] == 'images' ? true : false, 'result_to_event' => 'editor-set-field-value'], key($field['type'].'_'.$field['name'].'_field'))
+                                                            @if (isset($field['note']))
+                                                                <p>{{ $field['note'] }}</p>
+                                                            @endif
+                                                        @else
+                                                            <input id="{{ $field['name'] }}-field" class="form-control"
+                                                                placeHolder="{{ $field['placeholder'] ?? '' }}"
+                                                                wire:change='updateMultipleValue($event.target.value, "{{ $field['name'] }}")'
+                                                                value="{{ $value->{$field['name']} ?? ($field['default'] ?? '') }}"
+                                                                type="{{ $field['type'] }}" />
+                                                            @if (isset($field['note']))
+                                                                <p class="mb-2" style="color: #616161;">
+                                                                    {{ $field['note'] }}</p>
+                                                            @endif
                                                         @endif
-                                                    @else
-                                                        <input id="{{ $field['name'] }}-field" class="form-control"
-                                                            placeHolder="{{ $field['placeholder'] ?? '' }}"
-                                                            wire:change='updateMultipleValue($event.target.value, "{{ $field['name'] }}")'
-                                                            value="{{ $value->{$field['name']} ?? ($field['default'] ?? '') }}"
-                                                            type="{{ $field['type'] }}" />
-                                                        @if (isset($field['note']))
-                                                            <p class="mb-2" style="color: #616161;">
-                                                                {{ $field['note'] }}</p>
-                                                        @endif
-                                                    @endif
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         @endforeach
                                     </div>
                                 @else

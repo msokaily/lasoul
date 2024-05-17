@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Content as Contents;
+use App\Models\Media;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -20,12 +21,19 @@ class Content extends Component
     public $html_container = '';
     public $value;
     public $class = '';
+    public $style = '';
+    public $script = null;
+    public $editor_title = null;
+    public $tag = 'content-tag';
+    public $tag_attributes;
+    public $inline = false;
 
     #[On('refresh-content')]
     public function refresh($name)
     {
         if ($name == $this->name) {
             $this->mount();
+            $this->dispatch('refresh-content-component');
         }
     }
 
@@ -40,7 +48,7 @@ class Content extends Component
 
     public function edit()
     {
-        $this->dispatch('editor-type-changed', $this->name, $this->type, $this->default, $this->fields);
+        $this->dispatch('editor-type-changed', $this->name, $this->type, $this->default, $this->fields, $this->editor_title);
     }
 
     private function setValue($item)
@@ -76,8 +84,27 @@ class Content extends Component
                             $value = $item->value;
                         }
                         foreach ($this->fields as $one) {
-                            $searchParam[] = '[' . $one['name'] . ']';
-                            $replaceParam[] = isset($value->{$one['name']}) && !empty($value->{$one['name']}) ? $value->{$one['name']} : (isset($one['default']) ? $one['default'] : '');
+                            if (isset($one['only_editor']) && $one['only_editor']) {
+
+                            } else {
+                                $searchParam[] = '[' . $one['name'] . ']';
+                                $value_ = null;
+                                if (isset($value->{$one['name']}) && !empty($value->{$one['name']})) {
+                                    if (in_array($one['type'], ['image', 'video', 'media'])) {
+                                        $media = Media::where('id', $value->{$one['name']})->first();
+                                        $value_ = $media ? $media->url : '';
+                                    }else if ($one['type'] == 'textarea') {
+                                        $value_ = nl2br($value->{$one['name']});
+                                    } else {
+                                        $value_ = $value->{$one['name']};
+                                    }
+                                }
+                                $replaceParam[] = $value_ ? $value_ : (isset($one['default']) ? $one['default'] : '');
+
+                                // Value without default (used for conditions)
+                                $searchParam[] = '[__' . $one['name'] . ']';
+                                $replaceParam[] = $value_ ?? '';
+                            }
                         }
                         $htmlContent = str_replace($searchParam, $replaceParam, $this->html);
                         if ($this->html_container) {
@@ -113,8 +140,20 @@ class Content extends Component
                         $searchParam = [];
                         $replaceParam = [];
                         foreach ($this->fields as $one) {
-                            $searchParam[] = '[' . $one['name'] . ']';
-                            $replaceParam[] = $one['default'];
+                            if (isset($one['only_editor']) && $one['only_editor']) {
+
+                            } else {
+                                $searchParam[] = '[' . $one['name'] . ']';
+                                if ($one['type'] == 'textarea') {
+                                    $replaceParam[] = nl2br($one['default']);
+                                } else {
+                                    $replaceParam[] = $one['default'] ?? '';
+                                }
+
+                                // Value without default (used for conditions)
+                                $searchParam[] = '[__' . $one['name'] . ']';
+                                $replaceParam[] = '';
+                            }
                         }
                         $htmlContent = str_replace($searchParam, $replaceParam, $this->html);
                         if ($this->html_container) {

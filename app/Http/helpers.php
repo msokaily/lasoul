@@ -1,12 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
-use App\Models\User;
-use App\Models\ActivityUsers;
+use App\Models\Content;
 use App\Models\Settings;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 function can($permission)
 {
@@ -167,4 +163,28 @@ function price($item, $price_field)
 function orderDays($item)
 {
     return (Carbon::parse($item->end_date)->diffInDays(Carbon::parse($item->start_date)) + 1);
+}
+
+function content_get($content_name, $field_name = null)
+{
+    $item = Content::where('name', $content_name)->first();
+    if ($field_name) {
+        try {
+            $value = json_decode($item->value);
+            if (isset($value->{$field_name})) {
+                return $value->{$field_name};
+            }
+            return null;
+        } catch (\Throwable $th) {
+            return null;
+        }
+    }
+    if ($item) {
+        if ($item->type == 'images') {
+            return $item->value_url;
+        }
+        return $item->value;
+    } else {
+        return null;
+    }
 }

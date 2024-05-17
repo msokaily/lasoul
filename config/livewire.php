@@ -15,6 +15,8 @@ return [
 
     'class_namespace' => 'App\\Livewire',
 
+    // 'asset_url' => '/vendor/livewire/livewire.js',
+
     /*
     |---------------------------------------------------------------------------
     | View Path

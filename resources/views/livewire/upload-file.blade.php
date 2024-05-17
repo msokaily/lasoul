@@ -1,4 +1,4 @@
-<div class="input-group input-group-solid mb-5">
+<div class="input-group input-group-solid">
     <div class="col-md-12" ondragover="dragOverHandler(event)" ondragend="dropHandler(event)"
         ondragleave="leaveHandler(event)">
         <input @if (!$result_to_event) name="{{ $input ?? 'image' }}" @endif
@@ -30,7 +30,9 @@
                     @foreach ($preview as $key => $f)
                         @if ($f->type == 'video')
                             <div class="image-item video-item" style="{{$thumbnailWidth ? "width: $thumbnailWidth;" : ''}} {{$thumbnailHeight ? "height: $thumbnailHeight;" : ''}}" data-id="{{ $f->id }}">
-                                <i class="fa-solid fa-trash rm-btn" wire:click='removeFile({{ $f->id }})'></i>
+                                <i class="rm-btn" wire:click='removeFile({{ $f->id }})'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg>
+                                </i>
                                 <div class="img-number">{{ $key + 1 }}</div>
                                 <video controls preload="none">
                                     <source src="{{ $f->url }}"
@@ -40,7 +42,9 @@
                             </div>
                         @else
                             <div class="image-item" style="{{$thumbnailWidth ? "width: $thumbnailWidth;" : ''}} {{$thumbnailHeight ? "height: $thumbnailHeight;" : ''}}" data-id="{{ $f->id }}">
-                                <i class="fa-solid fa-trash rm-btn" wire:click='removeFile({{ $f->id }})'></i>
+                                <i class="rm-btn" wire:click='removeFile({{ $f->id }})'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg>
+                                </i>
                                 <div class="img-number">{{ $key + 1 }}</div>
                                 <img src="{{ $f->url }}">
                             </div>
@@ -49,10 +53,25 @@
                 </div>
             @else
                 <div class="mt-3">
-                    <div class="image-item" style="{{$thumbnailWidth ? "width: $thumbnailWidth;" : ''}} {{$thumbnailHeight ? "height: $thumbnailHeight;" : ''}}" data-id="{{ $preview->id }}">
-                        <i class="fa-solid fa-trash rm-btn" wire:click='removeFile({{ $preview->id }})'></i>
-                        <img src="{{ $preview->url }}">
-                    </div>
+                    @if ($preview->type == 'video')
+                        <div class="image-item video-item" style="{{$thumbnailWidth ? "width: $thumbnailWidth;" : ''}} {{$thumbnailHeight ? "height: $thumbnailHeight;" : ''}}" data-id="{{ $preview->id }}">
+                            <i class="rm-btn" wire:click='removeFile({{ $preview->id }})'>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg>
+                            </i>
+                            <video controls preload="none">
+                                <source src="{{ $preview->url }}"
+                                    type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        </div>
+                    @else
+                        <div class="image-item" style="{{$thumbnailWidth ? "width: $thumbnailWidth;" : ''}} {{$thumbnailHeight ? "height: $thumbnailHeight;" : ''}}" data-id="{{ $preview->id }}">
+                            <i class="rm-btn" wire:click='removeFile({{ $preview->id }})'>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM175 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg>
+                            </i>
+                            <img src="{{ $preview->url }}">
+                        </div>
+                    @endif
                 </div>
             @endif
         @endif

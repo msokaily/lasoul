@@ -1,5 +1,10 @@
 <?php
 return [
+    "story" => "قصة",
+    "menu" => "قائمة طعام",
+    "gallery" => "معرض الصور",
+
+    "Opening Hours" => "ساعات العمل",
     "sort_success" => "تم حفظ الترتيب بنجاح",
     "save_sort" => "حفظ الترتيب",
     "sub_categories" => "التصنيفات الفرعية",

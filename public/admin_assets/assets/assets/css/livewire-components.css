@@ -30,6 +30,9 @@
     transition: 0.3s;
     color: #c84646;
 }
+.image-item:hover > .rm-btn > svg {
+    fill: #c84646;
+}
 .image-item .rm-btn {
     position: absolute;
     transition: 0.3s;
@@ -42,6 +45,7 @@
     opacity: 0.7;
     cursor: pointer;
     z-index: 2;
+    width: 38px;
 }
 
 .image-item .img-number {

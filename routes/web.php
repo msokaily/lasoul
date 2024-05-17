@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Divota\HomeController;
-use App\Http\Controllers\Divota\MainController;
+use App\Http\Controllers\Website\MainController;
 use Illuminate\Support\Facades\Route;
+use Livewire\Livewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,21 +114,24 @@ Route::group(['middleware' => ['ControlPanel'], 'prefix' => 'admin', 'as' => 'ad
     });
 });
 
-Route::group(['middleware' => ['web']], function () {
 
-    Route::get('/rooms/{slug?}', [MainController::class, 'index'])->name('rooms');
-    Route::get('/apartments/{slug?}', [MainController::class, 'index'])->name('apartments');
-    Route::get('/accommodations', [MainController::class, 'index'])->name('accommodations');
-
-    Route::get('/cart', [MainController::class, 'cart'])->name('cart');
-    Route::get('/checkout', [MainController::class, 'checkout'])->name('checkout');
-    Route::get('/checkout/{id}/success', [MainController::class, 'checkout_success'])->name('checkout.success');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => [
+        'localeSessionRedirect',
+        'localizationRedirect',
+        'localeViewPath'
+    ],
+], function () {
     
-    Route::group(['middleware' => ['user']], function () {
-        Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
-        Route::post('/profile-profile', [HomeController::class, 'updateProfile'])->name('profile.update');
-        Route::get('/bookings', [HomeController::class, 'bookings'])->name('bookings');
-        Route::get('/changepass', [HomeController::class, 'changepass'])->name('changepass');
-        Route::post('/update-password', [HomeController::class, 'updatePassword'])->name('password.update');
+    Livewire::setScriptRoute(function ($handle) { return Route::get('/livewire/livewire.js', $handle); });
+    Livewire::setUpdateRoute(function ($handle) { return Route::post('/'.app()->getLocale().'/livewire/update', $handle); });
+
+    Route::group(['middleware' => ['web']], function () {
+        Route::get('/', function() {
+            return redirect('home');
+        });
+        Route::get('home', [MainController::class, 'index'])->name('home');
     });
+    
 });

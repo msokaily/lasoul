@@ -35,6 +35,12 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app['request']->server->set('HTTPS', $debug ? false : true);
         view()->composer('*', function ($view) {
+            $view->with([
+                'language' => app()->getLocale(),
+                'current_locale' => app()->getLocale(),
+                'available_locales' => config('laravellocalization.supportedLocales'),
+                'settings' => Settings::where('id', 1)->first()
+            ]);
         });
 
         view()->composer('admin.*', function ($view) {
