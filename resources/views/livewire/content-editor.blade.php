@@ -27,13 +27,13 @@
                                             @else
                                                 <div class="row mb-2">
                                                     <div class="col-md-{{$field['title_size'] ?? '2'}}">
-                                                        <label for="{{ slug($field['name']) }}-field" style="margin-top: 8px;">
+                                                        <label for="{{ \Str::slug($field['name']) }}-field" style="margin-top: 8px;">
                                                             <b>{{ ucfirst($field['name']) }}</b>
                                                         </label>
                                                     </div>
                                                     <div class="col-md{{ isset($field['input_size']) && $field['input_size'] ? '-'.$field['input_size'] : ''}}">
                                                         @if ($field['type'] == 'textarea')
-                                                            <textarea id="{{ slug($field['name']) }}-field" class="form-control" placeHolder="{{ $field['placeholder'] ?? '' }}"
+                                                            <textarea id="{{ \Str::slug($field['name']) }}-field" class="form-control" placeHolder="{{ $field['placeholder'] ?? '' }}"
                                                                 wire:change='updateMultipleValue($event.target.value, "{{ $field['name'] }}")' rows="10">{{ $value->{$field['name']} ?? ($field['default'] ?? '') }}</textarea>
                                                             @if (isset($field['note']))
                                                                 <p>{{ $field['note'] }}</p>
