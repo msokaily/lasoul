@@ -291,6 +291,20 @@ jQuery(document).ready(function(){
 		jQuery(this).removeClass('open');
 	});
 	
+	jQuery('.mobile-main-nav .menu-item > a').on( 'click', function(e) {
+		if ($(this).attr('href').startsWith('#')) {
+		e.preventDefault();
+		e.stopPropagation();
+		$('#btn-close-mobile-menu').trigger('click');
+		setTimeout(() => {
+			const top = $($(this).attr('href')).offset().top;
+			$('html, body').animate({
+				scrollTop: top
+			}, 500);
+		}, 200);
+		}
+	});
+	
 	jQuery('.mobile-menu-close a, #mobile-menu-close').on( 'click', function() {
 		jQuery('body').removeClass('js-nav');
 		setTimeout(function () { jQuery('body').toggleClass('modalview'); }, 400);

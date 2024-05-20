@@ -1,8 +1,5 @@
 /* CUSTOM STYLE */
-
-/* #wrapper.hasbg.transparent {
-    padding-top: 74px !important;
-} */
+@import url("https://fonts.googleapis.com/css2?family=Cairo&display=swap");
 
 .main-menu-wrapper .elementor-section:nth-child(1) {
     background-color: #b1c2a9;
@@ -54,4 +51,32 @@
 
 .food-menu-img img {
     border-radius: 5px;
+}
+
+[dir="rtl"] select {
+    background-position: calc(15px) calc(1em + 2px), calc(20px) calc(1em + 2px),
+        calc(2.5em) 0.25em;
+}
+
+[dir="rtl"]
+    .custom-css-style
+    .elementor-element.elementor-element-d6b5ce3
+    .themegoods-navigation-wrapper
+    .nav
+    li
+    > a {
+    font-size: 14px;
+    line-height: 2.5;
+    letter-spacing: 0px;
+}
+
+.custom-css-style .elementor-element.elementor-element-4d8e803>.elementor-element-populated {
+    border-style: solid;
+    border-width: 0 0 0 1px;
+    border-color: rgba(255, 255, 255, .4);
+    transition: background .3s, border .3s, border-radius .3s, box-shadow .3s;
+}
+
+.elementor-row {
+    justify-content: flex-end;
 }

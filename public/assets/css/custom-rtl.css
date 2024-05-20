@@ -1,0 +1,26 @@
+/* CUSTOM STYLE RTL */
+
+body *:not(.ti-arrow-up,.fab,.fa) {
+    font-family: "Cairo" !important;
+}
+
+body:not(.rtl) .custom-css-style .elementor-element.elementor-element-10812c3 {
+    right: initial;
+    left: 33%;
+}
+
+body:not(.rtl) .custom-css-style .elementor-element.elementor-element-2d8e628 {
+    right: initial;
+    left: -53%;
+}
+
+.my-mobile-txt {
+    font-size: 17px;
+}
+
+.custom-css-style .elementor-element.elementor-element-9bafdb1 {
+    text-align: left;
+    top: -200%;
+    left: -140%;
+    right: initial !important;
+}
