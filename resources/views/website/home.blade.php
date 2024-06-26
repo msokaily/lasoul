@@ -1025,14 +1025,14 @@
                                                                             <div class="tooltip_templates">
                                                                                 <div id="tooltip-content-{{$prod->id}}" class="food-menu-tooltip-content">
                                                                                     <div class="food-menu-tooltip-templates-content">
-                                                                                        <img src="{{$prod->image_url->url}}" alt="{{$prod->name}}" height="250px;">
+                                                                                        <img src="{{$prod->image_url->url ?? ''}}" alt="{{$prod->name}}" height="250px;">
                                                                                         <p>{{$prod->description}}</p>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             @if ($prod->image)
                                                                                 <div class="food-menu-img">
-                                                                                    <img src="{{$prod->image_url->url}}" alt="{{$prod->name}}" />
+                                                                                    <img src="{{$prod->image_url->url ?? ''}}" alt="{{$prod->name}}" />
                                                                                 </div>
                                                                             @endif
                                                                             <div class="food-menu-content menu-highlight">
